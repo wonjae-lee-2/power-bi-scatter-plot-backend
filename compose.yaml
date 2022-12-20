@@ -1,0 +1,27 @@
+services:
+  dev:
+    image: us-central1-docker.pkg.dev/project-lee-1/docker/power-bi-backend-dev
+    build:
+      context: .
+      dockerfile: ./Dockerfile/dev.Dockerfile
+    volumes:
+      - type: volume
+        source: workspace
+        target: /root/workspace
+    ports:
+      - "8787:8787"
+      - "8888:8888"
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: "/root/secrets/gsa-key.json"
+  prod:
+    image: us-central1-docker.pkg.dev/project-lee-1/docker/power-bi-backend-prod
+    build:
+      context: .
+      dockerfile: ./Dockerfile/prod.Dockefile
+    ports:
+      - "5000:5000"
+volumes:
+  workspace:
+    driver: rclone
+    driver_opts:
+      remote: "onedrive:backup/github/power-bi-scatter-plot-backend"
